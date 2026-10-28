@@ -1,0 +1,78 @@
+```java
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int m = sc.nextInt();
+        int n = sc.nextInt();
+
+        int[][] grid = new int[m][n];
+        Queue<int[]> queue = new LinkedList<>();
+
+        int trees = 0;
+        int time = 0;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                grid[i][j] = sc.nextInt();
+
+                if (grid[i][j] == 1) {
+                    trees++;
+                } else if (grid[i][j] == 2) {
+                    queue.add(new int[]{i, j});
+                }
+            }
+        }
+
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+
+        while (!queue.isEmpty() && trees > 0) {
+            int size = queue.size();
+            boolean spread = false;
+
+            for (int i = 0; i < size; i++) {
+                int[] cell = queue.poll();
+
+                for (int d = 0; d < 4; d++) {
+                    int r = cell[0] + dr[d];
+                    int c = cell[1] + dc[d];
+
+                    if (r >= 0 && r < m &&
+                        c >= 0 && c < n &&
+                        grid[r][c] == 1) {
+
+                        grid[r][c] = 2;
+                        trees--;
+                        spread = true;
+                        queue.add(new int[]{r, c});
+                    }
+                }
+            }
+
+            if (spread) {
+                time++;
+            }
+        }
+
+        if (trees == 0) {
+            System.out.println("Time required: " + time);
+        } else {
+            System.out.println(-1);
+        }
+
+        sc.close();
+    }
+}
+```
+
+
+Sample Input
+3 3
+2 1 1
+1 1 0
+0 1 1
+Sample Output
+Time required: 4
