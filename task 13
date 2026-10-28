@@ -1,0 +1,94 @@
+```java
+import java.util.*;
+
+class Main {
+    static class Edge {
+        int node, weight;
+
+        Edge(int node, int weight) {
+            this.node = node;
+            this.weight = weight;
+        }
+    }
+
+    static class Pair {
+        int node, distance;
+
+        Pair(int node, int distance) {
+            this.node = node;
+            this.distance = distance;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+
+        ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < m; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            int w = sc.nextInt();
+
+            graph.get(u).add(new Edge(v, w));
+            graph.get(v).add(new Edge(u, w));
+        }
+
+        int start = sc.nextInt();
+        int end = sc.nextInt();
+
+        int[] dist = new int[n];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[start] = 0;
+
+        PriorityQueue<Pair> pq = new PriorityQueue<>(
+            (a, b) -> Integer.compare(a.distance, b.distance)
+        );
+
+        pq.add(new Pair(start, 0));
+
+        while (!pq.isEmpty()) {
+            Pair p = pq.poll();
+
+            if (p.distance != dist[p.node]) {
+                continue;
+            }
+
+            for (Edge e : graph.get(p.node)) {
+                if (dist[p.node] + e.weight < dist[e.node]) {
+                    dist[e.node] = dist[p.node] + e.weight;
+                    pq.add(new Pair(e.node, dist[e.node]));
+                }
+            }
+        }
+
+        if (dist[end] == Integer.MAX_VALUE) {
+            System.out.println("No Route");
+        } else {
+            System.out.println("Shortest Distance: " + dist[end]);
+        }
+
+        sc.close();
+    }
+}
+```
+
+
+Sample Input
+5 6
+0 1 4
+0 2 2
+1 2 1
+1 3 5
+2 3 8
+3 4 2
+0 4
+Sample Output
+Shortest Distance: 11
